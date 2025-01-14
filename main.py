@@ -31,7 +31,7 @@ class Map:
         if self.racket is not None:
             return
         
-        # расчет индексов, чтобы добавлять ракетку по центру
+        # расчет индексов для добавления ракетки по центру (при ровном делении)
         start_x = 0
         end_x = r.width
         if to_center:
@@ -84,14 +84,14 @@ class Racket:
             return True
         
         dirs = {
-            "right": (0, 1),
-            "left": (0, -1)
+            "right": 1,
+            "left": -1
         }
         
         print(new_dir)
-        new_x1 = self.blocks[0].x + dirs[new_dir][1]
+        new_x1 = self.blocks[0].x + dirs[new_dir]
         # new_x2 = new_x1 + self.width - 1
-        new_x2 = self.blocks[-1].x + dirs[new_dir][1]
+        new_x2 = self.blocks[-1].x + dirs[new_dir]
         
         if not check_on_borders(self.map_link.map, new_x1, new_x2):
             print("Border!")
@@ -101,7 +101,7 @@ class Racket:
             self.map_link.map[b.y][b.x].content = None
         
         for b in self.blocks:
-            b.x = b.x + dirs[new_dir][1]
+            b.x = b.x + dirs[new_dir]
             self.map_link.map[b.y][b.x].content = b
         
         # self.map_link.update()
