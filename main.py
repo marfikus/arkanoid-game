@@ -143,4 +143,11 @@ map.show()
 # racket.move("right")
 # racket.move("right")
 
-
+while True:
+    com = input()
+    if com == "q":
+        break
+    elif com == "s":
+        result = racket.move("left")
+    elif com == "f":
+        result = racket.move("right")
