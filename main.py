@@ -6,6 +6,7 @@ class Map:
         self.map = [[Cell() for _ in range(self.width)] for _ in range(self.height)]
         self.bricks = []
         self.racket = None
+        self.ball = None
         
         
     def show(self):
@@ -21,7 +22,7 @@ class Map:
                     print(" b ", end="")
                 elif isinstance(content, RacketBlock):
                     print(" r ", end="")
-                elif isinstance(content, BallBlock):
+                elif isinstance(content, Ball):
                     print(" o ", end="")
             print()
         print(border)
@@ -45,6 +46,23 @@ class Map:
         
         r.map_link = self
         self.racket = r
+
+
+    def add_ball(self, b):
+        if self.ball is not None:
+            return
+
+        y = (self.height // 2) - 1
+        x = (self.width // 2) - 1
+        if self.racket is not None:
+            y = self.racket.blocks[0].y - 1
+            x = self.racket.blocks[self.racket.width // 2].x
+        b.y = y
+        b.x = x
+
+        self.map[b.y][b.x].content = b
+        self.ball = b
+        b.map_link = self
 
     
     def update(self):
@@ -115,20 +133,22 @@ class RacketBlock:
 
 
 class Ball:
-    pass
+    def __init__(self):
+        self.x = None
+        self.y = None
+        self.map_link = None
 
 
-class BallBlock:
-    def __init__(self, y, x):
-        self.x = x
-        self.y = y
+
 
 
 map = Map()
-map.show()
+# map.show()
 
 racket = Racket(3)
 map.add_racket(racket, to_center=False)
+ball = Ball()
+map.add_ball(ball)
 map.show()
 
 # racket.move("left")
