@@ -14,9 +14,6 @@ class Map:
         print(border)
         for y in range(self.height):
             for x in range(self.width):
-                # if self.map[y][x].player_here:
-                #     print(" p ", end="")
-                #     continue
                 content = self.map[y][x].content
                 if content is None:
                     print("   ", end="")
@@ -41,20 +38,10 @@ class Map:
             start_x = (self.width // 2) - (r.width // 2)
             end_x = start_x + r.width
         
-        # заполнение при толщине ракетки в 1 слой
-        # for i in range(len(r.blocks)):
-        #     r.blocks[i].y = self.height - 1
-        #     r.blocks[i].x = start_x + i
-        #     self.map[r.blocks[i].y][r.blocks[i].x].content = r.blocks[i]
-               
-        # при толщине в несколько слоёв
-        n = 0
-        for i in range(r.height):
-            for j in range(start_x, end_x):
-                r.blocks[n].y = (self.height - r.height) + i
-                r.blocks[n].x = j
-                self.map[r.blocks[n].y][r.blocks[n].x].content = r.blocks[n]
-                n += 1
+        for i in range(len(r.blocks)):
+            r.blocks[i].y = self.height - 1
+            r.blocks[i].x = start_x + i
+            self.map[r.blocks[i].y][r.blocks[i].x].content = r.blocks[i]
         
         r.map_link = self
         self.racket = r
@@ -80,15 +67,13 @@ class BrickBlock:
 
 
 class Racket:
-    def __init__(self, w=2, h=1):
+    def __init__(self, w=2):
         self.width = w
-        self.height = h
         self.map_link = None
         self.blocks = []
         
-        for i in range(self.height):
-            for j in range(self.width):
-                self.blocks.append(RacketBlock(i, j))
+        for i in range(self.width):
+            self.blocks.append(RacketBlock(None, i))
               
             
     def move(self, new_dir) -> bool:
@@ -142,20 +127,20 @@ class BallBlock:
 map = Map()
 map.show()
 
-racket = Racket(w=3, h=1)
-map.add_racket(racket)
+racket = Racket(3)
+map.add_racket(racket, to_center=False)
 map.show()
 
-racket.move("left")
-racket.move("right")
-racket.move("right")
-racket.move("right")
-racket.move("left")
-racket.move("right")
-racket.move("right")
-racket.move("right")
-racket.move("right")
-racket.move("right")
-racket.move("right")
+# racket.move("left")
+# racket.move("right")
+# racket.move("right")
+# racket.move("right")
+# racket.move("left")
+# racket.move("right")
+# racket.move("right")
+# racket.move("right")
+# racket.move("right")
+# racket.move("right")
+# racket.move("right")
 
 
