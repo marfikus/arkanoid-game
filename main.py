@@ -1,3 +1,5 @@
+import random
+
 
 class Map:
     def __init__(self, w=10, h=10):
@@ -28,16 +30,17 @@ class Map:
         print(border)
         
         
-    def add_racket(self, r, to_center=False):
+    def add_racket(self, r, x=None, to_center=False):
         if self.racket is not None:
             return
         
-        # расчет индексов для добавления ракетки по центру (при ровном делении)
         start_x = 0
-        end_x = r.width
-        if to_center:
-            start_x = (self.width // 2) - (r.width // 2)
-            end_x = start_x + r.width
+        if x is not None:
+            start_x = x
+        else:        
+            # расчет индекса для добавления ракетки по центру (при ровном делении)
+            if to_center:
+                start_x = (self.width // 2) - (r.width // 2)
         
         for i in range(len(r.blocks)):
             r.blocks[i].y = self.height - 1
@@ -48,17 +51,20 @@ class Map:
         self.racket = r
 
 
-    def add_ball(self, b):
+    def add_ball(self, b, y=None, x=None):
         if self.ball is not None:
             return
 
-        y = (self.height // 2) - 1
-        x = (self.width // 2) - 1
-        if self.racket is not None:
-            y = self.racket.blocks[0].y - 1
-            x = self.racket.blocks[self.racket.width // 2].x
-        b.y = y
-        b.x = x
+        _y = y
+        _x = x
+        if (y is None) or (x is None):
+            _y = (self.height // 2) - 1
+            _x = (self.width // 2) - 1
+            if self.racket is not None:
+                _y = self.racket.blocks[0].y - 1
+                _x = self.racket.blocks[self.racket.width // 2].x
+        b.y = _y
+        b.x = _x
 
         self.map[b.y][b.x].content = b
         self.ball = b
@@ -75,13 +81,20 @@ class Cell:
         
         
 class Brick:
-    pass
+    def __init__(self, w=2):
+        self.width = w
+        self.map_link = None
+        self.blocks = []
+        
+        for i in range(self.width):
+            self.blocks.append(BrickBlock(None, None, self))
 
 
 class BrickBlock:
-    def __init__(self, y, x):
+    def __init__(self, y, x, brick_link):
         self.x = x
         self.y = y
+        self.brick_link = brick_link
 
 
 class Racket:
@@ -91,10 +104,10 @@ class Racket:
         self.blocks = []
         
         for i in range(self.width):
-            self.blocks.append(RacketBlock(None, i))
+            self.blocks.append(RacketBlock(None, None, self))
               
             
-    def move(self, new_dir) -> bool:
+    def move(self, new_dir):
         def check_on_borders(map, x1, x2):
             if (x1 < 0) or (x2 >= len(map[0])):
                 return False
@@ -123,13 +136,14 @@ class Racket:
             self.map_link.map[b.y][b.x].content = b
         
         # self.map_link.update()
-        self.map_link.show()
+        # self.map_link.show()
         
         
 class RacketBlock:
-    def __init__(self, y, x):
+    def __init__(self, y, x, racket_link):
         self.x = x
         self.y = y
+        self.racket_link = racket_link
 
 
 class Ball:
@@ -137,19 +151,71 @@ class Ball:
         self.x = None
         self.y = None
         self.map_link = None
+        self.prev_dir = None
 
 
+    def move(self, new_dir=None):
+        dirs = {
+            "up-left": (-1, -1),
+            "up-right": (-1, 1),
+            "down-left": (1, -1),
+            "down-right": (1, 1),
+        }
 
+        if new_dir is None:
+            if self.prev_dir is not None:
+                new_dir = self.prev_dir
+            else:
+                new_dir = random.choice(list(dirs.keys()))
+
+        print(new_dir)
+        # map = self.map_link.map
+        new_y = self.y + dirs[new_dir][0]
+        new_x = self.x + dirs[new_dir][1]
+        
+        if new_dir == "up-left":
+            if new_x < 0:
+                if new_y < 0:
+                    # стена и потолок (угол)
+                    new_dir = "down-right"
+                else:
+                    # стена
+                    new_dir = "up-right"
+            elif new_y < 0:
+                # потолок
+                new_dir = "down-left"
+                
+            # кирпич и стена (угол)
+            # кирпич
+        
+        elif new_dir == "up-right":
+            pass
+        elif new_dir == "down-left":
+            pass
+        elif new_dir == "down-right":
+            pass
+        
+        self.map_link.map[self.y][self.x].content = None
+        self.y = self.y + dirs[new_dir][0]
+        self.x = self.x + dirs[new_dir][1]
+        self.map_link.map[self.y][self.x].content = self
+
+        print(new_dir)
+        self.prev_dir = new_dir
+        
+        self.map_link.show()
 
 
 map = Map()
 # map.show()
-
 racket = Racket(3)
-map.add_racket(racket, to_center=False)
+map.add_racket(racket, 2, to_center=False)
 ball = Ball()
-map.add_ball(ball)
+map.add_ball(ball, 1, 5)
 map.show()
+ball.move("up-left")
+ball.move()
+ball.move()
 
 # racket.move("left")
 # racket.move("right")
@@ -163,11 +229,11 @@ map.show()
 # racket.move("right")
 # racket.move("right")
 
-while True:
-    com = input()
-    if com == "q":
-        break
-    elif com == "s":
-        result = racket.move("left")
-    elif com == "f":
-        result = racket.move("right")
+# while True:
+#     com = input()
+#     if com == "q":
+#         break
+#     elif com == "s":
+#         result = racket.move("left")
+#     elif com == "f":
+#         result = racket.move("right")
