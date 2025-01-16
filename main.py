@@ -254,9 +254,56 @@ class Ball:
                     content_up_right.brick_link.map_link.remove_brick(content_up_right)
                     new_dir = "down-left"
 
-
         elif new_dir == "down-left":
-            pass
+            if new_x < 0:
+                if new_y == self.map_link.height:
+                    # стена и пол (угол)
+                    print("game over")
+                    return
+                elif isinstance(map[new_y][self.x].content, BrickBlock):
+                    # стена и кирпич (угол)
+                    content_down = map[new_y][self.x].content
+                    content_down.brick_link.map_link.remove_brick(content_down)
+                    new_dir = "up-right"
+                elif isinstance(map[new_y][self.x].content, RacketBlock):
+                    # стена и ракетка (угол)
+                    new_dir = "up-right"
+                else:
+                    # стена
+                    new_dir = "down-right"
+            elif new_y == self.map_link.height:
+                # пол
+                print("game over")
+                return
+            else:
+                content_down = map[new_y][self.x].content # под мячом
+                content_left = map[self.y][new_x].content # слева от мяча
+                content_down_left = map[new_y][new_x].content # по диагонали от мяча
+                if isinstance(content_down, BrickBlock):
+                    if isinstance(content_left, BrickBlock):
+                        # кирпичи снизу и слева от мяча
+                        content_down.brick_link.map_link.remove_brick(content_down)
+                        content_left.brick_link.map_link.remove_brick(content_left)
+                        new_dir = "up-right"
+                    else:
+                        # кирпич под мячом
+                        content_down.brick_link.map_link.remove_brick(content_down)
+                        new_dir = "up-left"
+                elif isinstance(content_down, RacketBlock):
+                    # ракетка под мячом
+                    new_dir = "up-left"
+                elif isinstance(content_left, BrickBlock):
+                    # кирпич слева от мяча
+                    content_left.brick_link.map_link.remove_brick(content_left)
+                    new_dir = "down-right"
+                elif isinstance(content_down_left, BrickBlock):
+                    # кирпич по диагонали от мяча
+                    content_down_left.brick_link.map_link.remove_brick(content_down_left)
+                    new_dir = "up-right"
+                elif isinstance(content_down_left, RacketBlock):
+                    # ракетка по диагонали от мяча
+                    new_dir = "up-right"
+
         elif new_dir == "down-right":
             pass
         
@@ -274,11 +321,11 @@ class Ball:
 map = Map()
 # map.show()
 racket = Racket(3)
-map.add_racket(racket, 2, to_center=False)
+map.add_racket(racket, 3, to_center=False)
 ball = Ball()
-map.add_ball(ball, 1, 5)
+map.add_ball(ball, 5, 1)
 map.show()
-ball.move("up-left")
+ball.move("down-left")
 ball.move()
 ball.move()
 
