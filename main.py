@@ -215,10 +215,46 @@ class Ball:
                     content_up_left.brick_link.map_link.remove_brick(content_up_left)
                     new_dir = "down-right"
 
-
-        
         elif new_dir == "up-right":
-            pass
+            if new_x == self.map_link.width:
+                if new_y < 0:
+                    # стена и потолок (угол)
+                    new_dir = "down-left"
+                elif isinstance(map[new_y][self.x].content, BrickBlock):
+                    # стена и кирпич (угол)
+                    content_up = map[new_y][self.x].content
+                    content_up.brick_link.map_link.remove_brick(content_up)
+                    new_dir = "down-left"
+                else:
+                    # стена
+                    new_dir = "up-left"
+            elif new_y < 0:
+                # потолок
+                new_dir = "down-right"
+            else:
+                content_up = map[new_y][self.x].content # над мячом
+                content_right = map[self.y][new_x].content # справа от мяча
+                content_up_right = map[new_y][new_x].content # по диагонали от мяча
+                if isinstance(content_up, BrickBlock):
+                    if isinstance(content_right, BrickBlock):
+                        # кирпичи сверху и справа от мяча
+                        content_up.brick_link.map_link.remove_brick(content_up)
+                        content_right.brick_link.map_link.remove_brick(content_right)
+                        new_dir = "down-left"
+                    else:
+                        # кирпич над мячом
+                        content_up.brick_link.map_link.remove_brick(content_up)
+                        new_dir = "down-left"
+                elif isinstance(content_right, BrickBlock):
+                    # кирпич справа от мяча
+                    content_right.brick_link.map_link.remove_brick(content_right)
+                    new_dir = "up-left"
+                elif isinstance(content_up_right, BrickBlock):
+                    # кирпич по диагонали от мяча
+                    content_up_right.brick_link.map_link.remove_brick(content_up_right)
+                    new_dir = "down-left"
+
+
         elif new_dir == "down-left":
             pass
         elif new_dir == "down-right":
