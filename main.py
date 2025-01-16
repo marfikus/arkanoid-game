@@ -12,11 +12,13 @@ class Map:
         
         
     def show(self):
-        # border = "=" * len(self.map[0]) * 3
-        border = " = " * len(self.map[0])
+        border = " " + "-=-" * len(self.map[0])
         print(border)
         for y in range(self.height):
+            print("|", end="")
+            num_line = " "
             for x in range(self.width):
+                num_line += f" {x} "
                 content = self.map[y][x].content
                 if content is None:
                     print("   ", end="")
@@ -26,8 +28,9 @@ class Map:
                     print(" r ", end="")
                 elif isinstance(content, Ball):
                     print(" o ", end="")
-            print()
+            print("|", y)
         print(border)
+        print(num_line)
         
         
     def add_racket(self, r, x=None, to_center=False):
