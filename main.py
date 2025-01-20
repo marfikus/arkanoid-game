@@ -370,7 +370,7 @@ class Ball:
                         if isinstance(content_right, BrickBlock):
                             # кирпичи снизу и справа от мяча
                             content_down.brick_link.map_link.remove_brick(content_down.brick_link)
-                            content_right.brick_link.map_link.remove_brick(content_right)
+                            content_right.brick_link.map_link.remove_brick(content_right.brick_link)
                             new_dir = "up-left"
                         else:
                             # кирпич под мячом
