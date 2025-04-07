@@ -5,7 +5,7 @@ from racket import Racket
 from ball import Ball
 
 
-def main():
+def start_console():
     map = Map(10, 15)
     racket = Racket(2)
     map.add_racket(racket, 3, to_center=False)
@@ -47,6 +47,21 @@ def main():
         elif com == "f":
             result = racket.move("right")
         ball.move()
+
+
+def start_gui():
+    pass
+
+
+def main():
+    # cmd = input("Select version please (1 - console, 2 - gui): ")
+    cmd = "1"
+    if cmd == "1":
+        start_console()
+    elif cmd == "2":
+        start_gui()
+    else:
+        print("Unknown command!")
 
 
 if __name__ == "__main__":
