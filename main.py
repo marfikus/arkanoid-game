@@ -50,12 +50,13 @@ def start_console():
 
 
 def start_gui():
-    pass
+    import pygame
+    
 
 
 def main():
-    # cmd = input("Select version please (1 - console, 2 - gui): ")
-    cmd = "1"
+    cmd = input("Select version please (1 - console, 2 - gui): ")
+    # cmd = "1"
     if cmd == "1":
         start_console()
     elif cmd == "2":
