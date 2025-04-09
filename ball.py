@@ -240,4 +240,4 @@ class Ball:
         print(new_dir)
         self.prev_dir = new_dir
         
-        self.map_link.show()
+        # self.map_link.show()
