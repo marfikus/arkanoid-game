@@ -55,11 +55,11 @@ def start_console():
 def start_gui():
     import pygame
 
-    MAP_WIDTH = 10
-    MAP_HEIGHT = 15
+    MAP_WIDTH = 20
+    MAP_HEIGHT = 30
 
     map = Map(MAP_WIDTH, MAP_HEIGHT)
-    racket = Racket(2)
+    racket = Racket(4)
     map.add_racket(racket, 3, to_center=False)
     ball = Ball()
     map.add_ball(ball, 4, 4)
@@ -74,6 +74,7 @@ def start_gui():
     SCREEN_WIDTH = MAP_WIDTH * BLOCK_SIZE
     SCREEN_HEIGHT = MAP_HEIGHT * BLOCK_SIZE
     FPS = 60
+    GAME_SPEED = 150
 
     BLACK = (0, 0, 0)
     RED = (255, 0, 0)
@@ -88,7 +89,7 @@ def start_gui():
     pygame.display.set_caption("Arkanoid")
     clock = pygame.time.Clock()
     TIMEREVENT = pygame.USEREVENT + 1
-    pygame.time.set_timer(TIMEREVENT, 1000)
+    pygame.time.set_timer(TIMEREVENT, GAME_SPEED)
 
 
     def update_screen():
@@ -113,6 +114,7 @@ def start_gui():
 
     running = True
     is_need_update_screen = True
+    racket_moved = False
 
     while running:
 
@@ -120,9 +122,32 @@ def start_gui():
             if event.type == pygame.QUIT:
                 running = False
 
+            if event.type == TIMEREVENT:
+                ball_moved = ball.move()
+                if ball_moved is None:
+                    running = False
+                is_need_update_screen = True
+
+            if event.type == pygame.KEYDOWN:
+                is_need_update_screen = True
+
+            pressed = pygame.key.get_pressed()
+            if pressed[pygame.K_LEFT]:
+                if not racket_moved:
+                    racket.move("left")
+                    racket_moved = True
+            elif pressed[pygame.K_RIGHT]:
+                if not racket_moved:
+                    racket.move("right")
+                    racket_moved = True
+            elif pressed[pygame.K_q]:
+                running = False
+
+
         if is_need_update_screen:
             update_screen()
             is_need_update_screen = False
+            racket_moved = False
 
         clock.tick(FPS)
     pygame.quit()
@@ -131,8 +156,8 @@ def start_gui():
 
 
 def main():
-    # cmd = input("Select version please (1 - console, 2 - gui): ")
-    cmd = "2"
+    cmd = input("Select version please (1 - console, 2 - gui): ")
+    # cmd = "2"
     if cmd == "1":
         start_console()
     elif cmd == "2":
