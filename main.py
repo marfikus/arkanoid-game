@@ -14,31 +14,11 @@ def start_console():
     ball = Ball()
     map.add_ball(ball, 4, 4)
 
-    # map.add_brick(Brick(), 0, 0)
-    # map.add_brick(Brick(), 0, 8)
-    # map.add_brick(Brick(), 1, 5)
     for i in range(3):
         for j in range(0, 10, 2):
             map.add_brick(Brick(), i, j)
         
     map.show()
-    # ball.move("up-left")
-    # ball.move()
-    # ball.move()
-    # ball.move()
-    # ball.move()
-
-    # racket.move("left")
-    # racket.move("right")
-    # racket.move("right")
-    # racket.move("right")
-    # racket.move("left")
-    # racket.move("right")
-    # racket.move("right")
-    # racket.move("right")
-    # racket.move("right")
-    # racket.move("right")
-    # racket.move("right")
 
     while True:
         com = input()
@@ -55,11 +35,11 @@ def start_console():
 def start_gui():
     import pygame
 
-    MAP_WIDTH = 20
-    MAP_HEIGHT = 30
+    MAP_WIDTH = 12
+    MAP_HEIGHT = 16
 
     map = Map(MAP_WIDTH, MAP_HEIGHT)
-    racket = Racket(4)
+    racket = Racket(2)
     map.add_racket(racket, 3, to_center=False)
     ball = Ball()
     map.add_ball(ball, 4, 4)
