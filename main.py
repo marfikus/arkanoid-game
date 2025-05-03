@@ -111,6 +111,16 @@ def start_gui():
             if event.type == pygame.KEYDOWN:
                 is_need_update_screen = True
 
+                # # так перемещается равномерно, но без удержания
+                # if event.key == pygame.K_LEFT:
+                #     racket.move("left")
+                # if event.key == pygame.K_RIGHT:
+                #     racket.move("right")
+                # if event.key == pygame.K_q:
+                #     running = False
+
+            # так перемещается быстрее и можно удерживать, но порой неравномерно, рывками
+            # но пока мне это больше нравится)
             pressed = pygame.key.get_pressed()
             if pressed[pygame.K_LEFT]:
                 if not racket_moved:
@@ -122,7 +132,6 @@ def start_gui():
                     racket_moved = True
             elif pressed[pygame.K_q]:
                 running = False
-
 
         if is_need_update_screen:
             update_screen()
